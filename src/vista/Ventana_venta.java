@@ -5,8 +5,12 @@
  */
 package vista;
 
+import conexion.ConexionBD;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import sql.ProductoSQL;
 
 /**
  *
@@ -17,6 +21,9 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     String hora, minutos, segundos, ampm;
     Calendar calendario;
     Thread h1;
+    ConexionBD conexion = new ConexionBD();
+    ProductoSQL ps = new ProductoSQL();
+    DefaultTableModel modelo = new DefaultTableModel();
 
     /**
      * Creates new form Ventana_venta
@@ -34,7 +41,6 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     }
 
     void campos(){
-        txtCodigoProducto.setEnabled(false);
             txtNombreProducto.setEnabled(false);
             txtCantidadProducto.setEnabled(false);
             btnAgregar.setEnabled(false);
@@ -202,6 +208,11 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
                 "Codigo", "Nombre", "Precio Unitario", "Cantidad", "Descuento", "Total"
             }
         ));
+        TablaProductos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TablaProductosKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(TablaProductos);
 
         jPanel3.add(jScrollPane1);
@@ -238,17 +249,21 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
 
     private void RB_IngresoManualMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RB_IngresoManualMouseClicked
         if (RB_IngresoManual.isSelected()) {
-         txtCodigoProducto.setEnabled(true);
             txtNombreProducto.setEnabled(true);
             txtCantidadProducto.setEnabled(true);
             btnAgregar.setEnabled(true);   
         }else{
-            txtCodigoProducto.setEnabled(false);
             txtNombreProducto.setEnabled(false);
             txtCantidadProducto.setEnabled(false);
             btnAgregar.setEnabled(false);
         }
     }//GEN-LAST:event_RB_IngresoManualMouseClicked
+
+    private void TablaProductosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TablaProductosKeyPressed
+        
+   
+        
+    }//GEN-LAST:event_TablaProductosKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

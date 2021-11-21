@@ -19,6 +19,6 @@ public interface CRUD {
 
     public int actualizar(Object[] o);
 
-    public void eliminar(int id);
+    public void eliminar(String id);
 }
 

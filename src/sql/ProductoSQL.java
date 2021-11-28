@@ -19,6 +19,25 @@ public class ProductoSQL implements CRUD {
     PreparedStatement ps;
     ResultSet rs;
     int r = 0;
+    
+    public EntidadProducto listarID(String codigob) {
+        EntidadProducto ep = new EntidadProducto();
+        String sql = "select * from table_producto where codigo_producto_PK=?";
+        try {
+            con = cn.getconnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, codigob);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ep.setCodigo(rs.getString(1));
+                ep.setNombre(rs.getString(2));
+                ep.setPrecio(rs.getInt(3));
+            }
+        } catch (SQLException e) {
+        }
+        return ep;
+    }
+
 
 
     @Override
@@ -33,7 +52,7 @@ public class ProductoSQL implements CRUD {
                 EntidadProducto ep = new EntidadProducto();
                 ep.setCodigo(rs.getString(1));
                 ep.setNombre(rs.getString(2));
-                ep.setPrecio(rs.getDouble(3));
+                ep.setPrecio(rs.getInt(3));
                 lista.add(ep);
             }
         } catch (Exception e) {

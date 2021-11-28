@@ -7,12 +7,12 @@ package sql;
 public class EntidadProducto {
     String codigo;
     String nombre;
-    double precio;
+    int precio;
 
       public EntidadProducto() {
     }
     
-    public EntidadProducto(String codigo, String nombre, double precio) {
+    public EntidadProducto(String codigo, String nombre, int precio) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
@@ -26,7 +26,7 @@ public class EntidadProducto {
         return nombre;
     }
 
-    public double getPrecio() {
+    public int getPrecio() {
         return precio;
     }
     
@@ -38,7 +38,7 @@ public class EntidadProducto {
         this.nombre = nombre;
     }
 
-    public void setPrecio(double precio) {
+    public void setPrecio(int precio) {
         this.precio = precio;
     }
     

@@ -6,11 +6,16 @@
 package vista;
 
 import conexion.ConexionBD;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import sql.EntidadProducto;
+import sql.EntidadVenta;
 import sql.ProductoSQL;
+import sql.VentaSQL;
 
 /**
  *
@@ -24,6 +29,11 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     ConexionBD conexion = new ConexionBD();
     ProductoSQL ps = new ProductoSQL();
     DefaultTableModel modelo = new DefaultTableModel();
+    EntidadVenta ev = new EntidadVenta();
+    VentaSQL ventasql = new VentaSQL();
+    EntidadProducto ep = new EntidadProducto();
+    String codigobarra;
+    int can, precio;
 
     /**
      * Creates new form Ventana_venta
@@ -40,11 +50,12 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         lblFecha.setText("" + calendar.get(calendar.YEAR) + "-" + (calendar.get(calendar.MONTH) + 1) + "-" + calendar.get(calendar.DAY_OF_MONTH));
     }
 
-    void campos(){
-            txtNombreProducto.setEnabled(false);
-            txtCantidadProducto.setEnabled(false);
-            btnAgregar.setEnabled(false);
+    void campos() {
+        txtNombreProducto.setEnabled(false);
+        txtCantidadProducto.setEnabled(false);
+        btnAgregar.setEnabled(false);
     }
+
     /*
    void hora() {
 
@@ -59,8 +70,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         //LocalTime horactual = LocalTime.now();
         //txtHora.setText(""+horactual);
     }
-*/
-
+     */
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -87,10 +97,11 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        txtCodigoProducto = new javax.swing.JTextField();
         txtNombreProducto = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
         RB_IngresoManual = new javax.swing.JRadioButton();
+        txtCodigoProducto = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaProductos = new javax.swing.JTable();
@@ -100,6 +111,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jLabel12 = new javax.swing.JLabel();
         lblFecha = new javax.swing.JLabel();
         lblHora = new org.edisoncor.gui.varios.ClockDigital();
+        lblVentaDescuento = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -131,9 +143,10 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 630, 90, 30));
 
         txtDescuentoVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jPanel1.add(txtDescuentoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 630, 80, 30));
+        jPanel1.add(txtDescuentoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 630, 80, 30));
 
         txtTotalVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtTotalVenta.setEnabled(false);
         jPanel1.add(txtTotalVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 630, 80, 30));
 
         txtIvaVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -142,6 +155,11 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         btnGenerarVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnGenerarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/caja.png"))); // NOI18N
         btnGenerarVenta.setText("Generar Venta");
+        btnGenerarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarVentaActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnGenerarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 630, 160, 40));
 
         jPanel2.setLayout(null);
@@ -171,10 +189,6 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jPanel2.add(jLabel10);
         jLabel10.setBounds(20, 30, 160, 30);
 
-        txtCodigoProducto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jPanel2.add(txtCodigoProducto);
-        txtCodigoProducto.setBounds(20, 130, 140, 30);
-
         txtNombreProducto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jPanel2.add(txtNombreProducto);
         txtNombreProducto.setBounds(20, 200, 140, 30);
@@ -194,6 +208,24 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         });
         jPanel2.add(RB_IngresoManual);
         RB_IngresoManual.setBounds(40, 320, 120, 25);
+
+        txtCodigoProducto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodigoProductoKeyPressed(evt);
+            }
+        });
+        jPanel2.add(txtCodigoProducto);
+        txtCodigoProducto.setBounds(20, 130, 140, 30);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1);
+        jButton1.setBounds(120, 90, 73, 23);
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 220, 430));
 
@@ -223,6 +255,11 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         btnCancelarVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnCancelarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/cancelar.png"))); // NOI18N
         btnCancelarVenta.setText("Cancelar Venta");
+        btnCancelarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarVentaActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnCancelarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 630, 160, 40));
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Bytes50.png"))); // NOI18N
@@ -242,6 +279,9 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         lblHora.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jPanel1.add(lblHora, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 90, 100, 40));
 
+        lblVentaDescuento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel1.add(lblVentaDescuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 630, 80, 30));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1360, 700));
 
         pack();
@@ -251,8 +291,8 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         if (RB_IngresoManual.isSelected()) {
             txtNombreProducto.setEnabled(true);
             txtCantidadProducto.setEnabled(true);
-            btnAgregar.setEnabled(true);   
-        }else{
+            btnAgregar.setEnabled(true);
+        } else {
             txtNombreProducto.setEnabled(false);
             txtCantidadProducto.setEnabled(false);
             btnAgregar.setEnabled(false);
@@ -260,10 +300,126 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_RB_IngresoManualMouseClicked
 
     private void TablaProductosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TablaProductosKeyPressed
-        
-   
-        
+
     }//GEN-LAST:event_TablaProductosKeyPressed
+
+    private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
+        guardarventa();
+        JOptionPane.showMessageDialog(null, "Ventana Realizada con exito", "Confirmacion",
+                JOptionPane.DEFAULT_OPTION, null);
+    }//GEN-LAST:event_btnGenerarVentaActionPerformed
+
+    private void txtCodigoProductoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoProductoKeyPressed
+
+     
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                agregarproducto(); //Método que tienes que crearte
+            }
+        
+    }//GEN-LAST:event_txtCodigoProductoKeyPressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        agregarproducto();
+        limpiarcampos();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnCancelarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarVentaActionPerformed
+        limpiarcampos();
+        limpiartabla();
+        JOptionPane.showMessageDialog(null, "Venta cancelada", "Alerta", JOptionPane.CANCEL_OPTION, null);
+        System.out.println("" + codigobarra);
+    }//GEN-LAST:event_btnCancelarVentaActionPerformed
+
+    void limpiarcampos() {
+        txtCodigoProducto.setText("");
+        txtNombreProducto.setText("");
+        txtCantidadProducto.setText("");
+        lblVentaDescuento.setText("");
+    }
+
+    void limpiartabla() {
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i = i - 1;
+        }
+    }
+
+    void guardarventa() {
+        int nu_venta_PK = 1;
+        String fecha = lblFecha.getText();
+        int total_monto = 2500;
+
+        ev.setNum_venta_pk(nu_venta_PK);
+        ev.setFecha_venta(fecha);
+        ev.setMonto_venta(total_monto);
+
+        ventasql.Guardar_Venta(ev);
+    }
+
+    void buscarproducto() {
+        if (txtCodigoProducto.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Debe ingresar codigo producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+        } else {
+            String codigobarra = txtCodigoProducto.getText();
+            ep = ps.listarID(codigobarra);
+            if (ep.getCodigo() != " ") {
+                ep = ps.listarID(codigobarra);
+                txtNombreProducto.setText("" + ep.getNombre());
+                System.out.println("" + ep.getNombre());
+            } else {
+                JOptionPane.showMessageDialog(null, "Producto inexistente", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+            }
+        }
+    }
+
+    void agregarproducto() {
+
+        if (txtCodigoProducto.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+        } else {
+            int total, descuento, iva, cantidadproducto;
+            modelo = (DefaultTableModel) TablaProductos.getModel();
+            can = 1;
+            //capturar nombre
+            ep = ps.listarID(codigobarra);
+            codigobarra = txtCodigoProducto.getText();
+            String nombre = ep.getNombre();
+            precio = ep.getPrecio();
+
+            //fin
+            total = can * ep.getPrecio();
+            ArrayList lista = new ArrayList();
+            lista.add(codigobarra);
+            lista.add(nombre);
+            lista.add(precio);
+            lista.add(can);
+            lista.add(0);
+            lista.add(total);
+            Object[] ob = new Object[6];
+            ob[0] = lista.get(0);
+            ob[1] = lista.get(1);
+            ob[2] = lista.get(2);
+            ob[3] = lista.get(3);
+            ob[4] = lista.get(4);
+            ob[5] = lista.get(5);
+            modelo.addRow(ob);
+            TablaProductos.setModel(modelo);
+            calculartotal();
+            lista.clear();
+        }
+    }
+
+    void calculartotal() {
+        int totalpago = 0;
+        for (int i = 0; i < TablaProductos.getRowCount(); i++) {
+            can = Integer.parseInt(TablaProductos.getValueAt(i, 3).toString());
+            precio = Integer.parseInt(TablaProductos.getValueAt(i, 2).toString());
+            totalpago = totalpago + (can * precio);
+//            System.out.println("" + totalpago);
+
+        }
+        txtTotalVenta.setText("" + totalpago);
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -272,6 +428,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelarVenta;
     private javax.swing.JButton btnGenerarVenta;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -291,6 +448,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblFecha;
     private org.edisoncor.gui.varios.ClockDigital lblHora;
+    private javax.swing.JLabel lblVentaDescuento;
     private javax.swing.JTextField txtCantidadProducto;
     private javax.swing.JTextField txtCodigoProducto;
     private javax.swing.JTextField txtDescuentoVenta;

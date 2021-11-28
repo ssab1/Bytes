@@ -1,4 +1,3 @@
-
 package vista;
 
 import conexion.ConexionBD;
@@ -10,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import sql.EntidadProducto;
 import sql.ProductoSQL;
 import conexion.ConexionBD;
+import java.sql.Connection;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,12 +21,16 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
     ConexionBD conexion = new ConexionBD();
     ProductoSQL ps = new ProductoSQL();
     DefaultTableModel modelo = new DefaultTableModel();
-    
+    EntidadProducto ep = new EntidadProducto();
+    ProductoSQL psql = new ProductoSQL();
+    String codigobarra;
+
     public Ventana_Consulta_Producto() {
         initComponents();
+        listar();
     }
 
-     void listar() {
+    void listar() {
         List<EntidadProducto> lista = ps.listar();
         modelo = (DefaultTableModel) table_consulta.getModel();
         Object[] ob = new Object[3];
@@ -36,9 +41,8 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
             modelo.addRow(ob);
         }
         table_consulta.setModel(modelo);
-
     }
-   
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -48,8 +52,9 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_consulta = new javax.swing.JTable();
-        cunsulta_datos = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        cunsulta_datos = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
@@ -87,49 +92,53 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 187, 640, 350));
 
-        cunsulta_datos.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel3.setText("Codigo");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 140, -1, 30));
+
         cunsulta_datos.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 cunsulta_datosKeyPressed(evt);
             }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                cunsulta_datosKeyTyped(evt);
-            }
         });
-        jPanel1.add(cunsulta_datos, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 140, 150, 30));
+        jPanel1.add(cunsulta_datos, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, 150, 30));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jLabel3.setText("Codigo");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 140, -1, 30));
+        jButton1.setText("jButton1");
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 140, 70, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 660, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cunsulta_datosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cunsulta_datosKeyTyped
-         if("".equals(cunsulta_datos.getText())){
-            listar();
-        }
-    }//GEN-LAST:event_cunsulta_datosKeyTyped
-
     private void cunsulta_datosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cunsulta_datosKeyPressed
-         if(evt.getKeyCode()==KeyEvent.VK_ENTER)
-        {
-        try
-        {
-           listar();
+        String [] titulos = {"Codigo","Nombre","Precio","Descuento"};
+        String [] registros = new String[50];
+        
+        String sql = "select * from table_producto where codigo_producto_PK like '%"+cunsulta_datos.getText()+"%'" ;
+        modelo = new DefaultTableModel(null, titulos);
+        Connection conect = conexion.getconnection();
+        try{
+            Statement st = conect.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                registros[0] = rs.getString("codigo_producto_PK");
+                registros[1] = rs.getString("nombre");
+                registros[2] = rs.getString("precio");
+                modelo.addRow(registros);
+            }
+        }catch(Exception e){
             
         }
-        catch(Exception e){
-    
-}
-        }
+        
     }//GEN-LAST:event_cunsulta_datosKeyPressed
 
+ 
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField cunsulta_datos;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

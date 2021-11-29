@@ -54,7 +54,6 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
         table_consulta = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         cunsulta_datos = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
@@ -103,16 +102,13 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
         });
         jPanel1.add(cunsulta_datos, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, 150, 30));
 
-        jButton1.setText("jButton1");
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 140, 70, 30));
-
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 660, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cunsulta_datosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cunsulta_datosKeyPressed
-        String [] titulos = {"Codigo","Nombre","Precio","Descuento"};
+           String [] titulos = {"Codigo","Nombre","Precio","Descuento"};
         String [] registros = new String[50];
         
         String sql = "select * from table_producto where codigo_producto_PK like '%"+cunsulta_datos.getText()+"%'" ;
@@ -126,10 +122,13 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
                 registros[1] = rs.getString("nombre");
                 registros[2] = rs.getString("precio");
                 modelo.addRow(registros);
+                
             }
+            table_consulta.setModel(modelo);
         }catch(Exception e){
             
         }
+        
         
     }//GEN-LAST:event_cunsulta_datosKeyPressed
 
@@ -138,7 +137,6 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField cunsulta_datos;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

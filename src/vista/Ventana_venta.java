@@ -148,7 +148,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 630, 90, 30));
 
         txtDescuentoVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jPanel1.add(txtDescuentoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 630, 80, 30));
+        jPanel1.add(txtDescuentoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 630, 80, 30));
 
         txtTotalVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtTotalVenta.setEnabled(false);
@@ -281,7 +281,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jPanel1.add(lblHora, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 90, 100, 40));
 
         lblVentaDescuento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jPanel1.add(lblVentaDescuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 630, 80, 30));
+        jPanel1.add(lblVentaDescuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 620, 80, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1360, 700));
 
@@ -307,15 +307,14 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         } else {
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 agregarproducto2(); //Método que tienes que crearte
-                
+
             }
         }
 
 
     }//GEN-LAST:event_txtCodigoProductoKeyPressed
 
-    
-   
+
     private void btnCancelarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarVentaActionPerformed
         limpiarcampos();
         limpiartabla();
@@ -326,34 +325,32 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     private void RB_IngresoManualMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RB_IngresoManualMouseClicked
         if (RB_IngresoManual.isSelected()) {
             txtCantidadProducto.setEnabled(true);
-           btnAgregar.setEnabled(true);
-           ingresomanual.setEnabled(true);
-           txtCodigoProducto.setEnabled(false);
-           
+            btnAgregar.setEnabled(true);
+            ingresomanual.setEnabled(true);
+            txtCodigoProducto.setEnabled(false);
+
         } else {
             txtCantidadProducto.setEnabled(false);
             btnAgregar.setEnabled(false);
             txtCodigoProducto.setEnabled(true);
             ingresomanual.setEnabled(false);
         }
-                
-                
+
+
     }//GEN-LAST:event_RB_IngresoManualMouseClicked
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        
-            if (RB_IngresoManual.isSelected()) {
-            agregarproducto4(); 
 
-        
+        if (RB_IngresoManual.isSelected()) {
+            agregarproducto4();
+
         } else {
-            
-                campos();
-                limpiarcampos();
-            
-                    
+
+            campos();
+            limpiarcampos();
+
         }
-       // agregarproducto3();
+        // agregarproducto3();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     void limpiarcampos() {
@@ -447,7 +444,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     }
 
     void agregarproducto2() {
-        
+
         String sql = "select * from table_producto where codigo_producto_PK = " + txtCodigoProducto.getText() + "";
         Connection conect = conexion.getconnection();
         try {
@@ -473,7 +470,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
                 //fin
 
                 //can = (Integer) Spinner_Cantidad.getValue();
-                can=1;
+                can = 1;
                 total = can * precio;
 
                 //lista.clear();
@@ -497,20 +494,51 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
                     ob[3] = lista.get(3);
                     ob[4] = lista.get(4);
                     ob[5] = lista.get(5);
-                    modelo.addRow(ob);
-                    TablaProductos.setModel(modelo);
 
-                    calculartotal();
-                    calculariva();
+                    boolean exist = false;
+                    for (int i = 0; i < modelo.getRowCount(); i++) {
+                        System.out.println("" + modelo.getValueAt(i, 0));
+                        String codigob = TablaProductos.getValueAt(i, 0).toString();
+                        String cantidadpro = TablaProductos.getValueAt(i, 3).toString();
+                        if (codigobarra.equals(codigob)) {
+                            System.out.println("******************************************************");
+                            int nuevocantidadpro = Integer.parseInt(cantidadpro);
+                            
+                            int sum = nuevocantidadpro + 1;
+                            lista.remove(3);
+                            ob[3] = lista.remove(3);
+                            lista.add(sum);
+                            ob[3] = lista.get(3);
+                            exist = true;
+                            System.out.println("esto es: " + sum);
+                            break;
+
+//                            System.out.println("" + modelo.getValueAt(i, 3) + "lo nuevo" + can);
+                        }
+
+                    }
+                    if (!exist) {
+                        modelo.addRow(ob);
+                        TablaProductos.setModel(modelo);
+
+                        calculartotal();
+                        calculariva();
+                        lista.remove(ob);
+                        lista.clear();
+                        codigobarra = null;
+                        nombre = null;
+                    }
                     lista.remove(ob);
                     lista.clear();
                     codigobarra = null;
                     nombre = null;
+
                 }
             }
         } catch (Exception e) {
 
         }
+
         limpiarcampos();
     }
 
@@ -522,10 +550,10 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         }
 
     }
-    
-      void agregarproducto4() {
 
-               String sql = "select * from table_producto where codigo_producto_PK = " + ingresomanual.getText() + "";
+    void agregarproducto4() {
+
+        String sql = "select * from table_producto where codigo_producto_PK = " + ingresomanual.getText() + "";
         Connection conect = conexion.getconnection();
         try {
             Statement st = conect.createStatement();
@@ -550,8 +578,8 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
                 //fin
 
                 //can = (Integer) Spinner_Cantidad.getValue();
-               String cantidad= txtCantidadProducto.getText();
-               int cant= Integer.parseInt(cantidad);
+                String cantidad = txtCantidadProducto.getText();
+                int cant = Integer.parseInt(cantidad);
                 total = cant * precio;
 
                 //lista.clear();
@@ -604,18 +632,19 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         }
         txtTotalVenta.setText("" + totalpago);
     }
-        void calculariva() {
+
+    void calculariva() {
         int totaliva = 0;
-        
+
         String total = txtTotalVenta.getText();
         int tota = Integer.parseInt(total);
-        
-        tota = (int) (tota*0.19);   
-        
-        total =Integer.toString(tota);
-        
-        txtIvaVenta.setText(""+total);
-        }
+
+        tota = (int) (tota * 0.19);
+
+        total = Integer.toString(tota);
+
+        txtIvaVenta.setText("" + total);
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

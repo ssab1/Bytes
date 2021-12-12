@@ -11,6 +11,9 @@ import sql.ProductoSQL;
 import conexion.ConexionBD;
 import java.sql.Connection;
 import java.util.ArrayList;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -101,6 +104,9 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 cunsulta_datosKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                cunsulta_datosKeyTyped(evt);
+            }
         });
         jPanel1.add(cunsulta_datos, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, 150, 30));
 
@@ -110,7 +116,7 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cunsulta_datosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cunsulta_datosKeyPressed
-           String [] titulos = {"Codigo","Nombre","Precio","Descuento"};
+           String [] titulos = {"Codigo","Nombre","Precio"};
         String [] registros = new String[50];
         
         String sql = "select * from table_producto where codigo_producto_PK like '%"+cunsulta_datos.getText()+"%'" ;
@@ -133,6 +139,29 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
         
         
     }//GEN-LAST:event_cunsulta_datosKeyPressed
+
+    private void cunsulta_datosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cunsulta_datosKeyTyped
+          char C = evt.getKeyChar();
+
+        if (Character.isLetter(C)) {
+            getToolkit().beep();
+            evt.consume();
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "No se admiten caracterez \n"
+                    + "Solo se permiten numeros", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+            cunsulta_datos.setCursor(null);
+        } else if ((int) evt.getKeyChar() > 32 && (int) evt.getKeyChar() <= 47
+                || (int) evt.getKeyChar() >= 58 && (int) evt.getKeyChar() <= 64
+                || (int) evt.getKeyChar() >= 91 && (int) evt.getKeyChar() <= 96
+                || (int) evt.getKeyChar() >= 123 && (int) evt.getKeyChar() <= 255) {
+            getToolkit().beep();
+            evt.consume();
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "No se admiten caracterez \n"
+                    + "Solo se permiten numeros", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+            cunsulta_datos.setCursor(null);
+        }
+    }//GEN-LAST:event_cunsulta_datosKeyTyped
 
  
     

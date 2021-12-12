@@ -146,7 +146,7 @@ public class MysqlExcelReportes {
 
             sheet.setZoom(100);
 
-            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\basti\\Desktop\\age\\Reporte.xlsx");
+            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\basti\\Desktop\\Reportes Bytes\\Reporte_Diario.xlsx");
             book.write(fileOut);
             fileOut.close();
 

@@ -27,7 +27,7 @@ public class UsuarioSQL implements CRUD {
 
         try {
             con = cn.getconnection();
-            ps = con.prepareStatement(sql);
+            ps = (PreparedStatement) con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
                 EntidadUsuarios eu = new EntidadUsuarios();
@@ -46,7 +46,7 @@ public class UsuarioSQL implements CRUD {
     @Override
     public int add(Object[] o) {
          int r = 0;
-        String sql = "insert into table_personal (validate_rut(rut_personal_PK),nombre,apellido,FK_id_rol) values (?,?,?,?)";
+        String sql = "insert into table_personal(rut_personal_PK,nombre,apellido,FK_id_rol) values (validate_rut(?),?,?,?)";
         try {
             con = cn.getconnection();
             ps = con.prepareStatement(sql);

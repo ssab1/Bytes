@@ -244,7 +244,7 @@ public class Ventana_Reporte_Rango_Fechas extends javax.swing.JInternalFrame {
             sheet.setZoom(100);
             
 
-            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\basti\\Desktop\\age\\Reporte_Productos_Rango_Fechas.xlsx");
+            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\basti\\Desktop\\Reportes Bytes\\Reporte_Productos_Rango_Fechas.xlsx");
             book.write(fileOut);
             fileOut.close();
 

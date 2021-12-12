@@ -152,6 +152,11 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
 
         btn_limpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/limpiar32.png"))); // NOI18N
         btn_limpiar.setText("Limpiar");
+        btn_limpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_limpiarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btn_limpiar);
         btn_limpiar.setBounds(30, 370, 110, 40);
 
@@ -230,6 +235,7 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
         agregar();
         LimpiarTabla();
         listar();
+        Limpiar();
     }//GEN-LAST:event_btn_agregarActionPerformed
 
     private void table_usuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_usuariosMouseClicked
@@ -237,7 +243,7 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
         if (fila == -1) {
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/seleccionar.png"));
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fila",
-                    "Alerta", JOptionPane.DEFAULT_OPTION, null);
+                    "Alerta", JOptionPane.DEFAULT_OPTION, icono);
         } else {
             String rut = table_usuarios.getValueAt(fila, 0).toString();
             String nombre = table_usuarios.getValueAt(fila, 1).toString();
@@ -246,7 +252,6 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
             nuevo_usuario_nombre.setText(nombre);
             nuevo_usuario_apellido.setText(apellido);
             nuevo_usuario_rut.setEditable(false);
-            nuevo_usuario_rut.enable(false);
 
         }
     }//GEN-LAST:event_table_usuariosMouseClicked
@@ -264,12 +269,15 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
         listar();
     }//GEN-LAST:event_btn_eliminarActionPerformed
 
+    private void btn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiarActionPerformed
+        Limpiar();
+    }//GEN-LAST:event_btn_limpiarActionPerformed
+
     void Limpiar() {
         nuevo_usuario_rut.setText("");
         nuevo_usuario_nombre.setText("");
         nuevo_usuario_apellido.setText("");
         nuevo_usuario_rut.setEditable(true);
-        nuevo_usuario_rut.enable(true);
     }
 
     void LimpiarTabla() {
@@ -284,7 +292,7 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
         if (nuevo_usuario_rut.getText().equals("") || nuevo_usuario_nombre.getText().equals("")
                 || nuevo_usuario_apellido.getText().equals("")) {
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
-            JOptionPane.showMessageDialog(null, "Hay campos vacios", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Hay campos vacios", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
         } else {
             String rut = nuevo_usuario_rut.getText();
             String nombre = nuevo_usuario_nombre.getText();
@@ -302,9 +310,9 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
             ob[3] = rol;
             usql.add(ob);
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/agregar.png"));
-            JOptionPane.showMessageDialog(null, "Usuario Agregado Exitosamente!!", "Confirmacion", JOptionPane.DEFAULT_OPTION, null);
-            Limpiar();
-            System.out.println("rut:" + rut + " nombre:" + nombre + " apellido:" + apellido + " rol:" + rol);
+            JOptionPane.showMessageDialog(null, "Usuario Agregado Exitosamente!!", "Confirmacion", JOptionPane.DEFAULT_OPTION, icono);
+            
+//            System.out.println("rut:" + rut + " nombre:" + nombre + " apellido:" + apellido + " rol:" + rol);
         }
     }
 
@@ -313,7 +321,7 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
         if (nuevo_usuario_rut.getText().equals("") || nuevo_usuario_nombre.getText().equals("")
                 || nuevo_usuario_apellido.getText().equals("")) {
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
-            JOptionPane.showMessageDialog(null, "Hay campos vacios", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Hay campos vacios", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
         } else {
             String rut = nuevo_usuario_rut.getText();
             String nombre = nuevo_usuario_nombre.getText();
@@ -331,7 +339,7 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
             ob[3] = rut;
             usql.actualizar(ob);
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/modificar.png"));
-            JOptionPane.showMessageDialog(null, "Datos actualizado", "Confirmacion", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Datos actualizado", "Confirmacion", JOptionPane.DEFAULT_OPTION, icono);
             Limpiar();
         }
     }
@@ -339,7 +347,7 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
     void eliminar(){
          if (nuevo_usuario_rut.getText().equals("")) {
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
-            JOptionPane.showMessageDialog(null, "Rut erroneo", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Rut erroneo", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
         } else {
              String rut = nuevo_usuario_rut.getText();
 
@@ -349,7 +357,7 @@ public class Ventana_Ingreso_Usuario extends javax.swing.JInternalFrame {
             
             usql.eliminar(rut);
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/eliminar.png"));
-            JOptionPane.showMessageDialog(null, "Usuario eliminado Exitosamente!!", "Confirmacion", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Usuario eliminado Exitosamente!!", "Confirmacion", JOptionPane.DEFAULT_OPTION, icono);
             Limpiar();
         }
     }

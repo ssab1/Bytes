@@ -248,7 +248,7 @@ public class Ventana_Reporte_Producto_Vendidos extends javax.swing.JInternalFram
 
             sheet.setZoom(100);
 
-            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\basti\\Desktop\\age\\Reporte_productos.xlsx");
+            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\basti\\Desktop\\Reportes Bytes\\Reporte_productos.xlsx");
             book.write(fileOut);
             fileOut.close();
 

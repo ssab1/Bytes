@@ -102,6 +102,12 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
         jLabel5.setText("Precio");
         jPanel2.add(jLabel5);
         jLabel5.setBounds(190, 210, 43, 20);
+
+        txt_in_pro_precio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_in_pro_precioKeyTyped(evt);
+            }
+        });
         jPanel2.add(txt_in_pro_precio);
         txt_in_pro_precio.setBounds(100, 240, 240, 30);
         jPanel2.add(txt_in_pro_codigo);
@@ -225,7 +231,6 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
             txt_in_pro_nombre.setText(nombre_prod);
             txt_in_pro_precio.setText(precio_prod);
             txt_in_pro_codigo.setEditable(false);
-            txt_in_pro_codigo.enable(false);
 
         }
     }//GEN-LAST:event_table_in_proMouseClicked
@@ -241,6 +246,29 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
         LimpiarTabla();
         listar();
     }//GEN-LAST:event_btn_in_pro_eliminarActionPerformed
+
+    private void txt_in_pro_precioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_in_pro_precioKeyTyped
+         char C = evt.getKeyChar();
+
+        if (Character.isLetter(C)) {
+            getToolkit().beep();
+            evt.consume();
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "No se admiten caracterez \n"
+                    + "Solo se permiten numeros", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+            txt_in_pro_precio.setCursor(null);
+        } else if ((int) evt.getKeyChar() > 32 && (int) evt.getKeyChar() <= 47
+                || (int) evt.getKeyChar() >= 58 && (int) evt.getKeyChar() <= 64
+                || (int) evt.getKeyChar() >= 91 && (int) evt.getKeyChar() <= 96
+                || (int) evt.getKeyChar() >= 123 && (int) evt.getKeyChar() <= 255) {
+            getToolkit().beep();
+            evt.consume();
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "No se admiten caracterez \n"
+                    + "Solo se permiten numeros", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+            txt_in_pro_precio.setCursor(null);
+        }
+    }//GEN-LAST:event_txt_in_pro_precioKeyTyped
 
     void Agregar() {
         if (txt_in_pro_codigo.getText().equals("") || txt_in_pro_nombre.getText().equals("")
@@ -267,7 +295,7 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
         if (txt_in_pro_codigo.getText().equals("") || txt_in_pro_nombre.getText().equals("") || 
                 txt_in_pro_precio.getText().equals("")) {
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
-            JOptionPane.showMessageDialog(null, "Hay campos vacios", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Hay campos vacios", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
         } else {
             String nombre_pro = txt_in_pro_nombre.getText();
             String precio_pro = txt_in_pro_precio.getText();
@@ -278,7 +306,7 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
             ob[2] = cod;
             ps.actualizar(ob);
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/modificar.png"));
-            JOptionPane.showMessageDialog(null, "Producto actualizado", "Confirmacion", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Producto actualizado", "Confirmacion", JOptionPane.DEFAULT_OPTION, icono);
             Limpiar();
         }
     }
@@ -286,7 +314,7 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
      void Eliminar(){
          if (txt_in_pro_codigo.getText().equals("")) {
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
-            JOptionPane.showMessageDialog(null, "Codigo erroneo", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Codigo erroneo", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
         } else {
              String codigo = txt_in_pro_codigo.getText();
 
@@ -296,7 +324,7 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
             
             ps.eliminar(cod);
             Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/eliminar.png"));
-            JOptionPane.showMessageDialog(null, "Producto eliminado Exitosamente!!", "Confirmacion", JOptionPane.DEFAULT_OPTION, null);
+            JOptionPane.showMessageDialog(null, "Producto eliminado Exitosamente!!", "Confirmacion", JOptionPane.DEFAULT_OPTION, icono);
             Limpiar();
         }
      }
@@ -306,7 +334,6 @@ public class Ventana_Ingreso_Producto extends javax.swing.JInternalFrame {
         txt_in_pro_nombre.setText("");
         txt_in_pro_precio.setText("");
         txt_in_pro_codigo.setEditable(true);
-        txt_in_pro_codigo.enable(true);
     }
 
     void LimpiarTabla() {

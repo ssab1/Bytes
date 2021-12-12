@@ -51,11 +51,9 @@ public class Inicio_sesion extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(192, 190, 190));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         jLabel1.setText("@Todos los derechos reservados 2021");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 220, 30));
 
         txt_rut.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         txt_rut.setBorder(null);
@@ -67,10 +65,8 @@ public class Inicio_sesion extends javax.swing.JFrame {
                 txt_rutKeyTyped(evt);
             }
         });
-        jPanel1.add(txt_rut, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 160, 30));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Bytes7575.png"))); // NOI18N
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 120, 50));
 
         btn_salir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/salir.png"))); // NOI18N
         btn_salir.setContentAreaFilled(false);
@@ -79,7 +75,6 @@ public class Inicio_sesion extends javax.swing.JFrame {
                 btn_salirMouseClicked(evt);
             }
         });
-        jPanel1.add(btn_salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 0, 40, 50));
 
         btn_ingresar.setText("Ingresar");
         btn_ingresar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -87,21 +82,60 @@ public class Inicio_sesion extends javax.swing.JFrame {
                 btn_ingresarMouseClicked(evt);
             }
         });
-        jPanel1.add(btn_ingresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Bienvenido");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 110, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Rut:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 130, 110, 30));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(100, 100, 100)
+                .addComponent(btn_salir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(txt_rut, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(btn_ingresar))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_salir, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(txt_rut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(btn_ingresar)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,8 +176,8 @@ public class Inicio_sesion extends javax.swing.JFrame {
     void inicio_sesion() {
         String RUT = txt_rut.getText();
         if (txt_rut.getText().equals("")) {
-//            Icon icono = new ImageIcon(getClass().getResource("/iconos/warning.png"));
-            JOptionPane.showMessageDialog(null, "Debe Ingresar Rut", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+       Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Debe Ingresar Rut", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
         } else {
             EntidadPersonal enpe = log.ListarRut(RUT);
             System.out.println("TIPO DE ROL ANTES DEL IF: "+enpe.getRol());
@@ -163,7 +197,8 @@ public class Inicio_sesion extends javax.swing.JFrame {
                 System.out.println("TIPO ROL: "+variablerol);
                 System.out.println("INGRESA POR EL ROL 2");
             } else {
-                JOptionPane.showMessageDialog(null, "Rut Invalido", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+                Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+                JOptionPane.showMessageDialog(null, "Rut Invalido", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
             }
 
         }

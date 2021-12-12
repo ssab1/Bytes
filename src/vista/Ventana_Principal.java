@@ -65,7 +65,6 @@ public class Ventana_Principal extends javax.swing.JFrame {
         }
 
     }
-
     void ventaingresoproducto() {
         if (vip == null || vip.isClosed()) {
             vip = new Ventana_Ingreso_Producto();

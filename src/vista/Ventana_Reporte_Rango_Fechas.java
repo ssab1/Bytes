@@ -5,6 +5,42 @@
  */
 package vista;
 
+import com.mysql.jdbc.Connection;
+import conexion.ConexionBD;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import sql.MysqlExcelReportes;
+
 /**
  *
  * @author basti
@@ -33,10 +69,13 @@ public class Ventana_Reporte_Rango_Fechas extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jDateChooser3 = new com.toedter.calendar.JDateChooser();
-        jDateChooser4 = new com.toedter.calendar.JDateChooser();
+        fechafin = new com.toedter.calendar.JDateChooser();
+        fechainicio = new com.toedter.calendar.JDateChooser();
 
         setClosable(true);
+        setResizable(true);
+        setTitle("Reporte Ventas por Rango de Fecha");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Bicon.png"))); // NOI18N
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(250, 249, 249));
@@ -52,6 +91,11 @@ public class Ventana_Reporte_Rango_Fechas extends javax.swing.JInternalFrame {
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/mecanismo.png"))); // NOI18N
         jButton1.setText("Generar Reporte");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 190, -1, 40));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -62,22 +106,162 @@ public class Ventana_Reporte_Rango_Fechas extends javax.swing.JInternalFrame {
         jLabel4.setText("Fecha Inicial");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, -1, -1));
 
-        jDateChooser3.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        jPanel1.add(jDateChooser3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 120, 150, -1));
+        fechafin.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        jPanel1.add(fechafin, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 120, 150, -1));
 
-        jDateChooser4.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        jPanel1.add(jDateChooser4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 150, -1));
+        fechainicio.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        jPanel1.add(fechainicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 150, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 530, 250));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        reporterangodefechas();
+        Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/excel.png"));
+        JOptionPane.showMessageDialog(null, "Reporte Generado con exito", "Confirmacion", JOptionPane.ERROR_MESSAGE, icono);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    
+    void reporterangodefechas() {
+        
+        Date date = fechainicio.getDate();
+        long d = date.getTime();
+        java.sql.Date fecha = new java.sql.Date(d);
+        String alo = fecha.toString();
+
+        Date dat = fechafin.getDate();
+        long c = dat.getTime();
+        java.sql.Date fecha2 = new java.sql.Date(c);
+        String alo2 = fecha2.toString();
+
+        Workbook book = new XSSFWorkbook();
+        Sheet sheet = book.createSheet("Ventas");
+
+        try {
+            InputStream is = new FileInputStream("src\\imagenes\\Bytes50e.png");
+            byte[] bytes = IOUtils.toByteArray(is);
+            int imgIndex = book.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+            is.close();
+
+            CreationHelper help = book.getCreationHelper();
+            Drawing draw = sheet.createDrawingPatriarch();
+
+            ClientAnchor anchor = help.createClientAnchor();
+            anchor.setCol1(0);
+            anchor.setRow1(1);
+            Picture pict = draw.createPicture(anchor, imgIndex);
+            pict.resize(1, 3);
+
+            CellStyle tituloEstilo = book.createCellStyle();
+            tituloEstilo.setAlignment(HorizontalAlignment.CENTER);
+            tituloEstilo.setVerticalAlignment(VerticalAlignment.CENTER);
+            Font fuenteTitulo = book.createFont();
+            fuenteTitulo.setFontName("Arial");
+            fuenteTitulo.setBold(true);
+            fuenteTitulo.setFontHeightInPoints((short) 14);
+            tituloEstilo.setFont(fuenteTitulo);
+
+            Row filaTitulo = sheet.createRow(1);
+            Cell celdaTitulo = filaTitulo.createCell(1);
+            celdaTitulo.setCellStyle(tituloEstilo);
+            celdaTitulo.setCellValue("Venta Por Fecha");
+
+            sheet.addMergedRegion(new CellRangeAddress(1, 2, 1, 3));
+
+               String[] cabecera = new String[]{ "Fecha Venta",
+                "Valor Iva", "Valor Total",};
+
+            CellStyle headerStyle = book.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+            headerStyle.setBorderLeft(BorderStyle.THIN);
+            headerStyle.setBorderRight(BorderStyle.THIN);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+
+            Font font = book.createFont();
+            font.setFontName("Arial");
+            font.setBold(true);
+            font.setColor(IndexedColors.WHITE.getIndex());
+            font.setFontHeightInPoints((short) 12);
+            headerStyle.setFont(font);
+
+            Row filaEncabezados = sheet.createRow(4);
+
+            for (int i = 0; i < cabecera.length; i++) {
+                Cell celdaEnzabezado = filaEncabezados.createCell(i);
+                celdaEnzabezado.setCellStyle(headerStyle);
+                celdaEnzabezado.setCellValue(cabecera[i]);
+            }
+
+            ConexionBD con = new ConexionBD();
+            PreparedStatement ps;
+            ResultSet rs;
+            Connection conn = con.getconnection();
+
+            int numFilaDatos = 5;
+
+            CellStyle datosEstilo = book.createCellStyle();
+            datosEstilo.setBorderBottom(BorderStyle.THIN);
+            datosEstilo.setBorderLeft(BorderStyle.THIN);
+            datosEstilo.setBorderRight(BorderStyle.THIN);
+            datosEstilo.setBorderBottom(BorderStyle.THIN);
+
+            ps = conn.prepareStatement("select fecha, sum(tv.Valor_iva) ,sum(tv.total) from table_venta tv "
+                    + "where fecha>='"+alo+"' and fecha<='"+alo2+"' group by fecha");
+            rs = ps.executeQuery();
+
+            int numCol = rs.getMetaData().getColumnCount();
+
+            while (rs.next()) {
+                Row filaDatos = sheet.createRow(numFilaDatos);
+
+                for (int a = 0; a < numCol; a++) {
+
+                    Cell CeldaDatos = filaDatos.createCell(a);
+                    CeldaDatos.setCellStyle(datosEstilo);
+
+                    if (a == 1 || a == 3 ) {
+                        CeldaDatos.setCellValue(rs.getInt(a + 1));
+                    } else {
+                        CeldaDatos.setCellValue(rs.getString(a + 1));
+                    }
+                }
+
+                numFilaDatos++;
+
+            }
+
+            sheet.autoSizeColumn(0);
+            sheet.autoSizeColumn(1);
+            sheet.autoSizeColumn(2);
+            sheet.autoSizeColumn(3);
+            sheet.autoSizeColumn(4);
+            sheet.autoSizeColumn(5);
+
+            sheet.setZoom(100);
+            
+
+            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\basti\\Desktop\\age\\Reporte_Productos_Rango_Fechas.xlsx");
+            book.write(fileOut);
+            fileOut.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MysqlExcelReportes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MysqlExcelReportes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MysqlExcelReportes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser fechafin;
+    private com.toedter.calendar.JDateChooser fechainicio;
     private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser3;
-    private com.toedter.calendar.JDateChooser jDateChooser4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

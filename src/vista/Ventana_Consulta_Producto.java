@@ -57,6 +57,8 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setResizable(true);
+        setTitle("Consulta Producto");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Bicon.png"))); // NOI18N
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(250, 249, 249));
@@ -75,11 +77,11 @@ public class Ventana_Consulta_Producto extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Precio", "Descuento"
+                "Codigo", "Nombre", "Precio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

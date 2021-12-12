@@ -11,6 +11,10 @@ import javax.swing.ImageIcon;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.Icon;
+import sql.EntidadPersonal;
+import sql.InicioSesion;
+import sql.MysqlExcelReportes;
+
 /**
  *
  * @author basti
@@ -22,14 +26,29 @@ public class Ventana_Principal extends javax.swing.JFrame {
      */
     public Ventana_venta vent = null;
     public Ventana_Consulta_Producto vcp = null;
-    public Ventana_Reporte_Rango_Fechas vrrf=null;
-    public Ventana_Ingreso_Producto vip=null;
+    public Ventana_Reporte_Rango_Fechas vrrf = null;
+    public Ventana_Ingreso_Producto vip = null;
+    public Ventana_Ingreso_Usuario viu = null;
+    public Ventana_Reporte_Producto_Vendidos vrpv = null;
 
     public Ventana_Principal() {
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("/iconos/Bicon.png")).getImage());
         setExtendedState(MAXIMIZED_BOTH);
     }
 
+
+//    public Ventana_Principal(EntidadPersonal mod)
+//    {
+//        initComponents();
+//        setExtendedState(MAXIMIZED_BOTH);
+//        this.mod=mod;
+//        if (mod.getRol()==1) {
+//            
+//        }else if (mod.getRol()==2) {
+//            jMenuItem2.setVisible(false);
+//        }
+//    }
     void ventanaventas() {
         if (vent == null || vent.isClosed()) {
             vent = new Ventana_venta();
@@ -41,12 +60,13 @@ public class Ventana_Principal extends javax.swing.JFrame {
             } catch (Exception e) {
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, null);
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, icono);
         }
 
     }
-    
-        void ventaingresoproducto() {
+
+    void ventaingresoproducto() {
         if (vip == null || vip.isClosed()) {
             vip = new Ventana_Ingreso_Producto();
             this.Ventana_general.add(vip);
@@ -57,10 +77,12 @@ public class Ventana_Principal extends javax.swing.JFrame {
             } catch (Exception e) {
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, null);
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, icono);
         }
 
     }
+
     //Centrar JINTERNALFRAME en pantalla JDESKTOPPANE
     void ventanaconsultaproductos() {
         if (vcp == null || vcp.isClosed()) {
@@ -71,12 +93,14 @@ public class Ventana_Principal extends javax.swing.JFrame {
             Dimension FrameSize = vcp.getSize();
             vcp.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
             vcp.show();
-        }else{
-             JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, null);
+        } else {
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, icono);
         }
     }
-    void ventanareporterangofechas(){
-       if (vrrf == null || vrrf.isClosed()) {
+
+    void ventanareporterangofechas() {
+        if (vrrf == null || vrrf.isClosed()) {
             vrrf = new Ventana_Reporte_Rango_Fechas();
             this.Ventana_general.add(vrrf);
             vrrf.setVisible(true);
@@ -84,9 +108,42 @@ public class Ventana_Principal extends javax.swing.JFrame {
             Dimension FrameSize = vrrf.getSize();
             vrrf.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
             vrrf.show();
-        }else{
-             JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, null);
-        } 
+        } else {
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, icono);
+        }
+    }
+//     Ventana_Ingreso_Usuario viu= new Ventana_Ingreso_Usuario();
+//        viu.setVisible(true);
+
+    void ventanaingresousuario() {
+        if (viu == null || viu.isClosed()) {
+            viu = new Ventana_Ingreso_Usuario();
+            this.Ventana_general.add(viu);
+            viu.setVisible(true);
+            Dimension desktopSize = Ventana_general.getSize();
+            Dimension FrameSize = viu.getSize();
+            viu.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+            viu.show();
+        } else {
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, icono);
+        }
+    }
+
+    void ventanaproductorangofechas() {
+        if (vrpv == null || vrpv.isClosed()) {
+            vrpv = new Ventana_Reporte_Producto_Vendidos();
+            this.Ventana_general.add(vrpv);
+            vrpv.setVisible(true);
+            Dimension desktopSize = Ventana_general.getSize();
+            Dimension FrameSize = vrpv.getSize();
+            vrpv.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+            vrpv.show();
+        } else {
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Ventana abierta", "Error", JOptionPane.ERROR_MESSAGE, icono);
+        }
     }
 
     /**
@@ -114,9 +171,11 @@ public class Ventana_Principal extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         Menu_Reporte_Rango_Fechas = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jmNuevoUsuario = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -151,6 +210,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
 
         Menu_Ingreso_Producto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        Menu_Ingreso_Producto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/inventario.png"))); // NOI18N
         Menu_Ingreso_Producto.setText("Ingreso Productos");
         Menu_Ingreso_Producto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -189,7 +249,21 @@ public class Ventana_Principal extends javax.swing.JFrame {
         jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/reporte_diario.png"))); // NOI18N
         jMenuItem3.setText("Reporte Diario");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem3);
+
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/grafico.png"))); // NOI18N
+        jMenuItem2.setText("Productos Mas Vendidos");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem2);
 
         jMenuBar1.add(jMenu3);
 
@@ -198,6 +272,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         jMenu4.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/salidausuario.png"))); // NOI18N
         jMenuItem1.setText("Cerrar Sistema");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,6 +281,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
         });
         jMenu4.add(jMenuItem1);
 
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/cerrar-sesionuser.png"))); // NOI18N
         jMenuItem4.setText("Cerrar Sesion");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,6 +289,15 @@ public class Ventana_Principal extends javax.swing.JFrame {
             }
         });
         jMenu4.add(jMenuItem4);
+
+        jmNuevoUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/nuevousuario.png"))); // NOI18N
+        jmNuevoUsuario.setText("Nuevo Usuario");
+        jmNuevoUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmNuevoUsuarioActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jmNuevoUsuario);
 
         jMenuBar1.add(jMenu4);
 
@@ -249,7 +334,7 @@ public class Ventana_Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_Menu_Reporte_Rango_FechasActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-          Inicio_sesion inse= new Inicio_sesion();
+        Inicio_sesion inse = new Inicio_sesion();
         inse.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
@@ -257,6 +342,22 @@ public class Ventana_Principal extends javax.swing.JFrame {
     private void Menu_Ingreso_ProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Menu_Ingreso_ProductoActionPerformed
         ventaingresoproducto();
     }//GEN-LAST:event_Menu_Ingreso_ProductoActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        MysqlExcelReportes mer = new MysqlExcelReportes();
+        mer.reporteventas();
+        Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/excel.png"));
+        JOptionPane.showMessageDialog(null, "Reporte Generado con exito", "Confirmacion", JOptionPane.ERROR_MESSAGE, icono);
+
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jmNuevoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmNuevoUsuarioActionPerformed
+        ventanaingresousuario();
+    }//GEN-LAST:event_jmNuevoUsuarioActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        ventanaproductorangofechas();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -307,7 +408,9 @@ public class Ventana_Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private static javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    public static javax.swing.JMenuItem jmNuevoUsuario;
     // End of variables declaration//GEN-END:variables
 }

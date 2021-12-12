@@ -13,8 +13,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import sql.EntidadDeVenta;
 import sql.EntidadProducto;
 import sql.EntidadVenta;
 import sql.ProductoSQL;
@@ -33,6 +37,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     ProductoSQL ps = new ProductoSQL();
     DefaultTableModel modelo = new DefaultTableModel();
     EntidadVenta ev = new EntidadVenta();
+    EntidadDeVenta edv = new EntidadDeVenta();
     VentaSQL ventasql = new VentaSQL();
     EntidadProducto ep = new EntidadProducto();
     String codigobarra = null;
@@ -47,7 +52,10 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     public Ventana_venta() {
         initComponents();
         fecha();
-        campos();
+        pro_nombre.setEditable(false);
+        pro_precio.setEditable(false);
+        txtIvaVenta.setEditable(false);
+        txtTotalVenta.setEditable(false);
     }
 
     //obtener fecha actual de la pc
@@ -56,11 +64,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         lblFecha.setText("" + calendar.get(calendar.YEAR) + "-" + (calendar.get(calendar.MONTH) + 1) + "-" + calendar.get(calendar.DAY_OF_MONTH));
     }
 
-    void campos() {
-        txtCantidadProducto.setEnabled(false);
-        btnAgregar.setEnabled(false);
-        ingresomanual.setEnabled(false);
-    }
+   
 
     /*
    void hora() {
@@ -92,8 +96,6 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txtDescuentoVenta = new javax.swing.JTextField();
         txtTotalVenta = new javax.swing.JTextField();
         txtIvaVenta = new javax.swing.JTextField();
         btnGenerarVenta = new javax.swing.JButton();
@@ -103,10 +105,12 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
-        RB_IngresoManual = new javax.swing.JRadioButton();
-        txtCodigoProducto = new javax.swing.JTextField();
         ingresomanual = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        pro_precio = new javax.swing.JTextField();
+        pro_nombre = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaProductos = new javax.swing.JTable();
@@ -120,6 +124,8 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setIconifiable(true);
+        setTitle("Punto de Venta");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Bicon.png"))); // NOI18N
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(250, 249, 249));
@@ -143,15 +149,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jLabel6.setText("Iva:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 630, -1, 30));
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel7.setText("Descuento:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 630, 90, 30));
-
-        txtDescuentoVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jPanel1.add(txtDescuentoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 630, 80, 30));
-
         txtTotalVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtTotalVenta.setEnabled(false);
         jPanel1.add(txtTotalVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 630, 80, 30));
 
         txtIvaVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -170,18 +168,23 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         jPanel2.setLayout(null);
 
         txtCantidadProducto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtCantidadProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadProductoKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtCantidadProducto);
-        txtCantidadProducto.setBounds(20, 270, 140, 30);
+        txtCantidadProducto.setBounds(20, 320, 180, 30);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Codigo");
         jPanel2.add(jLabel2);
-        jLabel2.setBounds(20, 170, 60, 30);
+        jLabel2.setBounds(20, 80, 60, 30);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("Cantidad");
         jPanel2.add(jLabel8);
-        jLabel8.setBounds(20, 240, 70, 30);
+        jLabel8.setBounds(20, 280, 70, 30);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/carrito-de-compras.png"))); // NOI18N
@@ -200,33 +203,38 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
             }
         });
         jPanel2.add(btnAgregar);
-        btnAgregar.setBounds(40, 370, 120, 40);
+        btnAgregar.setBounds(30, 370, 120, 40);
 
-        RB_IngresoManual.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        RB_IngresoManual.setText("Ingreso Manual");
-        RB_IngresoManual.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                RB_IngresoManualMouseClicked(evt);
-            }
-        });
-        jPanel2.add(RB_IngresoManual);
-        RB_IngresoManual.setBounds(40, 320, 120, 25);
-
-        txtCodigoProducto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+        ingresomanual.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtCodigoProductoKeyPressed(evt);
+                ingresomanualKeyPressed(evt);
             }
         });
-        jPanel2.add(txtCodigoProducto);
-        txtCodigoProducto.setBounds(20, 130, 140, 30);
         jPanel2.add(ingresomanual);
-        ingresomanual.setBounds(20, 200, 140, 30);
+        ingresomanual.setBounds(20, 110, 180, 30);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText("Codigo");
+        jLabel4.setText("Precio");
         jPanel2.add(jLabel4);
-        jLabel4.setBounds(20, 100, 60, 30);
+        jLabel4.setBounds(20, 220, 60, 30);
+        jPanel2.add(pro_precio);
+        pro_precio.setBounds(20, 250, 180, 30);
+        jPanel2.add(pro_nombre);
+        pro_nombre.setBounds(20, 180, 180, 30);
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel13.setText("Nombre");
+        jPanel2.add(jLabel13);
+        jLabel13.setBounds(20, 150, 60, 30);
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/limpiar32.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1);
+        jButton1.setBounds(160, 370, 50, 40);
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 220, 430));
 
@@ -238,7 +246,7 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Precio Unitario", "Cantidad", "Descuento", "Total"
+                "Codigo", "Nombre", "Precio Unitario", "Cantidad", "Total"
             }
         ));
         TablaProductos.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -293,71 +301,133 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_TablaProductosKeyPressed
 
     private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
+        
+        if (txtTotalVenta.getText().equals("")) {
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+             JOptionPane.showMessageDialog(null, "No hay datos para la venta", "Alerta",
+                JOptionPane.DEFAULT_OPTION, icono);   
+        }else{
+        
+        int montocliente = Integer.parseInt(JOptionPane.showInputDialog("Ingrese monto"));
+        System.out.println("monto");
+        int montoventa = Integer.parseInt(txtTotalVenta.getText());
+        
+        int calculovuelto= montocliente-montoventa;
+        
+        JOptionPane.showMessageDialog(null, "El vuelto es: \n " +"$"+calculovuelto, "Confirmacion",
+                JOptionPane.DEFAULT_OPTION, null);   
+        System.out.println("**********************************************");
         guardarventa();
+        guardardetalle();
+        Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/cajero-automatico.png"));
         JOptionPane.showMessageDialog(null, "Ventana Realizada con exito", "Confirmacion",
-                JOptionPane.DEFAULT_OPTION, null);
-    }//GEN-LAST:event_btnGenerarVentaActionPerformed
-
-    private void txtCodigoProductoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoProductoKeyPressed
-
-        if (RB_IngresoManual.isSelected()) {
-            campos();
-            limpiarcampos();
-
-        } else {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                agregarproducto2(); //Método que tienes que crearte
-
-            }
+                JOptionPane.DEFAULT_OPTION, icono);
+        limpiartabla();
+        limpiarcamposventa();
+        ingresomanual.requestFocus();
         }
-
-
-    }//GEN-LAST:event_txtCodigoProductoKeyPressed
+    }//GEN-LAST:event_btnGenerarVentaActionPerformed
 
 
     private void btnCancelarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarVentaActionPerformed
         limpiarcampos();
         limpiartabla();
-        JOptionPane.showMessageDialog(null, "Venta cancelada", "Alerta", JOptionPane.CANCEL_OPTION, null);
+        limpiarcamposventa();
+        Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+        JOptionPane.showMessageDialog(null, "Venta cancelada", "Alerta", JOptionPane.CANCEL_OPTION, icono);
         System.out.println("" + codigobarra);
+        ingresomanual.requestFocus();
     }//GEN-LAST:event_btnCancelarVentaActionPerformed
-
-    private void RB_IngresoManualMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RB_IngresoManualMouseClicked
-        if (RB_IngresoManual.isSelected()) {
-            txtCantidadProducto.setEnabled(true);
-            btnAgregar.setEnabled(true);
-            ingresomanual.setEnabled(true);
-            txtCodigoProducto.setEnabled(false);
-
-        } else {
-            txtCantidadProducto.setEnabled(false);
-            btnAgregar.setEnabled(false);
-            txtCodigoProducto.setEnabled(true);
-            ingresomanual.setEnabled(false);
-        }
-
-
-    }//GEN-LAST:event_RB_IngresoManualMouseClicked
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
 
-        if (RB_IngresoManual.isSelected()) {
+        int val= Integer.parseInt(txtCantidadProducto.getText().toString());
+         
+        if (val == 0 ) {
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Cantidad No puede ser 0", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+        }else{
             agregarproducto4();
+            
 
-        } else {
-
-            campos();
             limpiarcampos();
-
+            ingresomanual.requestFocus();
         }
+
+        
         // agregarproducto3();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
+    private void ingresomanualKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ingresomanualKeyPressed
+   
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                buscarpro(); //Método que tienes que crearte
+
+            }
+        
+    }//GEN-LAST:event_ingresomanualKeyPressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        limpiarcampos();
+        ingresomanual.requestFocus();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtCantidadProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadProductoKeyTyped
+        char C = evt.getKeyChar();
+
+        if (Character.isLetter(C)) {
+            getToolkit().beep();
+            evt.consume();
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "No se admiten caracterez \n"
+                    + "Solo se permiten numeros", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+            txtCantidadProducto.setCursor(null);
+        } else if ((int) evt.getKeyChar() > 32 && (int) evt.getKeyChar() <= 47
+                || (int) evt.getKeyChar() >= 58 && (int) evt.getKeyChar() <= 64
+                || (int) evt.getKeyChar() >= 91 && (int) evt.getKeyChar() <= 96
+                || (int) evt.getKeyChar() >= 123 && (int) evt.getKeyChar() <= 255) {
+            getToolkit().beep();
+            evt.consume();
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "No se admiten caracterez \n"
+                    + "Solo se permiten numeros", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+            txtCantidadProducto.setCursor(null);
+        }
+    }//GEN-LAST:event_txtCantidadProductoKeyTyped
+
+    void buscarpro(){
+        if (ingresomanual.getText().equals("")) {
+            Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+            JOptionPane.showMessageDialog(null, "Debe ingresar codigo producto", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+        }else{
+            String codpro = ingresomanual.getText();
+            ep =ps.listarID(codpro);
+            if (ep.getCodigo() != "" ) {
+                pro_nombre.setText(""+ep.getNombre());
+                pro_precio.setText(""+ ep.getPrecio());
+                txtCantidadProducto.requestFocus();
+            }else{
+                Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+                JOptionPane.showMessageDialog(null, "Producto inexistente", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
+            }
+            
+        }
+     
+}
+    
+    
     void limpiarcampos() {
-        txtCodigoProducto.setText("");
         txtCantidadProducto.setText("");
         lblVentaDescuento.setText("");
         ingresomanual.setText("");
+        pro_nombre.setText("");
+        pro_precio.setText("");
+        
+        
+    }
+    void limpiarcamposventa(){
+        txtTotalVenta.setText("");
+        txtIvaVenta.setText("");
     }
 
     void limpiartabla() {
@@ -367,180 +437,319 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         }
     }
 
-    void guardarventa() {
-        int nu_venta_PK = 1;
-        String fecha = lblFecha.getText();
-        int total_monto = 2500;
+//    void buscarproducto() {
+//        if (txtCodigoProducto.getText().equals("")) {
+//            JOptionPane.showMessageDialog(null, "Debe ingresar codigo producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+//        } else {
+//            String codigobarra = txtCodigoProducto.getText();
+//            ep = ps.listarID(codigobarra);
+//            if (ep.getCodigo() != " ") {
+//                ep = ps.listarID(codigobarra);
+//                System.out.println("" + ep.getNombre());
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Producto inexistente", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+//            }
+//        }
+//    }
 
-        ev.setNum_venta_pk(nu_venta_PK);
-        ev.setFecha_venta(fecha);
-        ev.setMonto_venta(total_monto);
+//    void agregarproducto() {
+//
+//        if (txtCodigoProducto.getText().equals("")) {
+//            JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+//        } else {
+//
+//            int total, descuento, iva, cantidadproducto;
+//            modelo = (DefaultTableModel) TablaProductos.getModel();
+//            //capturar nombre
+//            ep = ps.listarID(codigobarra);
+//            codigobarra = txtCodigoProducto.getText();
+//            String nombre = ep.getNombre();
+//            precio = ep.getPrecio();
+//            //fin
+//            can = 1;
+//            //can = (Integer) Spinner_Cantidad.getValue();
+//            total = can * ep.getPrecio();
+//
+//            //lista.clear();
+//            //for (int i = 0; i < lista.size(); i++) {
+//            //    lista.remove(i);
+//            //}
+//            if (codigobarra == "" || nombre == "" || precio == 0 || can == 0 || total == 0) {
+//
+//            } else {
+//
+//                lista.add(codigobarra);
+//                lista.add(nombre);
+//                lista.add(precio);
+//                lista.add(can);
+//                lista.add(0);
+//                lista.add(total);
+//                Object[] ob = new Object[6];
+//                ob[0] = lista.get(0);
+//                ob[1] = lista.get(1);
+//                ob[2] = lista.get(2);
+//                ob[3] = lista.get(3);
+//                ob[4] = lista.get(4);
+//                ob[5] = lista.get(5);
+//                modelo.addRow(ob);
+//                TablaProductos.setModel(modelo);
+//                calculartotal();
+//                lista.remove(ob);
+//
+//            }
+//
+//        }
+//    }
+//
+//    void agregarproducto2() {
+//
+//        String sql = "select * from table_producto where codigo_producto_PK = " + txtCodigoProducto.getText() + "";
+//        Connection conect = conexion.getconnection();
+//        try {
+//            Statement st = conect.createStatement();
+//            ResultSet rs = st.executeQuery(sql);
+//            while (rs.next()) {
+//                codigobarra = rs.getString("codigo_producto_PK");
+//                nombre = rs.getString("nombre");
+//                precio = rs.getInt("precio");
+//            }
+//
+//            if (txtCodigoProducto.getText().equals("")) {
+//                JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+//            } else {
+//
+//                int total, descuento, iva, cantidadproducto;
+//                modelo = (DefaultTableModel) TablaProductos.getModel();
+//                //capturar nombre
+//                //ep = ps.listarID(codigobarra);
+//                //codigobarra = txtCodigoProducto.getText();
+//                //String nombre = ep.getNombre();
+//                //precio = ep.getPrecio();
+//                //fin
+//
+//                //can = (Integer) Spinner_Cantidad.getValue();
+//                can = 1;
+//                total = can * precio;
+//
+//                //lista.clear();
+//                //for (int i = 0; i < lista.size(); i++) {
+//                //    lista.remove(i);
+//                //}
+//                if (codigobarra != codigobarra || nombre == null || codigobarra == null) {
+//                    JOptionPane.showMessageDialog(null, "Codigo no registrado", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+//                } else {
+//
+//                    lista.add(codigobarra);
+//                    lista.add(nombre);
+//                    lista.add(precio);
+//                    lista.add(can);
+//                    lista.add(0);
+//                    lista.add(total);
+//                    Object[] ob = new Object[6];
+//                    ob[0] = lista.get(0);
+//                    ob[1] = lista.get(1);
+//                    ob[2] = lista.get(2);
+//                    ob[3] = lista.get(3);
+//                    ob[4] = lista.get(4);
+//                    ob[5] = lista.get(5);
+//
+//                    boolean exist = false;
+//                    for (int i = 0; i < modelo.getRowCount(); i++) {
+//                        System.out.println("" + modelo.getValueAt(i, 0));
+//                        String codigob = TablaProductos.getValueAt(i, 0).toString();
+//
+//                        if (codigobarra.equals(codigob)) {
+//                            String cantidadpro = TablaProductos.getValueAt(i, 3).toString();
+//                            System.out.println("*************************" + cantidadpro + "************************");
+//                            System.out.println("******************************************************");
+//                            int nuevocantidadpro = Integer.parseInt(cantidadpro);
+//
+//                            int sum = nuevocantidadpro + 1;
+//                            Iterator it = lista.iterator();
+//                            DefaultTableModel dm = (DefaultTableModel) TablaProductos.getModel();
+//                            while (it.hasNext()) {
+//                                System.out.println("MUESTRA DE DATOS LISTA : " + it.next());
+////                                lista.set(3, sum);
+////                                ob[3] = lista.set(3, sum);
+//                                TablaProductos.setValueAt(sum, 0,
+//                                        3);
+//                                int calucototla = sum * precio;
+//                                TablaProductos.setValueAt(calucototla, 0,
+//                                        5);
+//
+////                                System.out.println("objeto 3: "+ ob[3]);
+////                                TablaProductos.editCellAt(1, 3);
+////                                TablaProductos.setModel(modelo);
+////                                DefaultTableModel tableModel = (DefaultTableModel) TablaProductos.getModel();
+////                                tableModel.setRowCount(0);
+////                                dm.fireTableDataChanged();
+////                                TablaProductos.repaint();
+//                            }
+////                            lista.add(codigobarra);
+////                            lista.add(nombre);
+////                            lista.add(precio);
+////                            lista.get(sum);
+//
+////                            lista.add(0);
+////                            lista.add(total);
+////                            ob[0] = lista.get(0);
+////                            ob[1] = lista.get(1);
+////                            ob[2] = lista.get(2);
+////                            ob[3] = lista.get(3);
+////                            ob[4] = lista.get(4);
+////                            ob[5] = lista.get(5);
+//                            exist = true;
+//                            modelo.fireTableDataChanged();
+//                            System.out.println("la suma de producto existen mas el nmuevo es: " + sum);
+//                            System.out.println("Codigo del producto: " + TablaProductos.getValueAt(i, 0));
+//                            System.out.println("cantidad existente: " + TablaProductos.getValueAt(i, 3));
+//                            System.out.println("--FIN--");
+//                            lista.remove(ob);
+//                            lista.clear();
+//                            codigobarra = null;
+//                            nombre = null;
+//                            break;
+//
+////                            System.out.println("" + modelo.getValueAt(i, 3) + "lo nuevo" + can);
+//                        }
+//
+//                    }
+//
+//                    if (!exist) {
+//                        modelo.addRow(ob);
+//                        TablaProductos.setModel(modelo);
+//
+//                        calculartotal();
+//                        calculariva();
+//
+//                        lista.remove(ob);
+//                        lista.clear();
+//                        codigobarra = null;
+//                        nombre = null;
+//                        System.out.println("pasa por aca");
+//                    }
+//
+//                    lista.remove(ob);
+//                    lista.clear();
+//                    codigobarra = null;
+//                    nombre = null;
+//
+//                }
+//            }
+//        } catch (Exception e) {
+//
+//        }
+//
+//        lista.clear();
+//        codigobarra = null;
+//        nombre = null;
+//        limpiarcampos();
+//    }
 
-        ventasql.Guardar_Venta(ev);
-    }
-
-    void buscarproducto() {
-        if (txtCodigoProducto.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Debe ingresar codigo producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
-        } else {
-            String codigobarra = txtCodigoProducto.getText();
-            ep = ps.listarID(codigobarra);
-            if (ep.getCodigo() != " ") {
-                ep = ps.listarID(codigobarra);
-                System.out.println("" + ep.getNombre());
-            } else {
-                JOptionPane.showMessageDialog(null, "Producto inexistente", "Alerta", JOptionPane.DEFAULT_OPTION, null);
-            }
-        }
-    }
-
-    void agregarproducto() {
-
-        if (txtCodigoProducto.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
-        } else {
-
-            int total, descuento, iva, cantidadproducto;
-            modelo = (DefaultTableModel) TablaProductos.getModel();
-            //capturar nombre
-            ep = ps.listarID(codigobarra);
-            codigobarra = txtCodigoProducto.getText();
-            String nombre = ep.getNombre();
-            precio = ep.getPrecio();
-            //fin
-            can = 1;
-            //can = (Integer) Spinner_Cantidad.getValue();
-            total = can * ep.getPrecio();
-
-            //lista.clear();
-            //for (int i = 0; i < lista.size(); i++) {
-            //    lista.remove(i);
-            //}
-            if (codigobarra == "" || nombre == "" || precio == 0 || can == 0 || total == 0) {
-
-            } else {
-
-                lista.add(codigobarra);
-                lista.add(nombre);
-                lista.add(precio);
-                lista.add(can);
-                lista.add(0);
-                lista.add(total);
-                Object[] ob = new Object[6];
-                ob[0] = lista.get(0);
-                ob[1] = lista.get(1);
-                ob[2] = lista.get(2);
-                ob[3] = lista.get(3);
-                ob[4] = lista.get(4);
-                ob[5] = lista.get(5);
-                modelo.addRow(ob);
-                TablaProductos.setModel(modelo);
-                calculartotal();
-                lista.remove(ob);
-
-            }
-
-        }
-    }
-
-    void agregarproducto2() {
-
-        String sql = "select * from table_producto where codigo_producto_PK = " + txtCodigoProducto.getText() + "";
-        Connection conect = conexion.getconnection();
-        try {
-            Statement st = conect.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            while (rs.next()) {
-                codigobarra = rs.getString("codigo_producto_PK");
-                nombre = rs.getString("nombre");
-                precio = rs.getInt("precio");
-            }
-
-            if (txtCodigoProducto.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
-            } else {
-
-                int total, descuento, iva, cantidadproducto;
-                modelo = (DefaultTableModel) TablaProductos.getModel();
-                //capturar nombre
-                //ep = ps.listarID(codigobarra);
-                //codigobarra = txtCodigoProducto.getText();
-                //String nombre = ep.getNombre();
-                //precio = ep.getPrecio();
-                //fin
-
-                //can = (Integer) Spinner_Cantidad.getValue();
-                can = 1;
-                total = can * precio;
-
-                //lista.clear();
-                //for (int i = 0; i < lista.size(); i++) {
-                //    lista.remove(i);
-                //}
-                if (codigobarra != codigobarra || nombre == null || codigobarra == null) {
-                    JOptionPane.showMessageDialog(null, "Codigo no registrado", "Alerta", JOptionPane.DEFAULT_OPTION, null);
-                } else {
-
-                    lista.add(codigobarra);
-                    lista.add(nombre);
-                    lista.add(precio);
-                    lista.add(can);
-                    lista.add(0);
-                    lista.add(total);
-                    Object[] ob = new Object[6];
-                    ob[0] = lista.get(0);
-                    ob[1] = lista.get(1);
-                    ob[2] = lista.get(2);
-                    ob[3] = lista.get(3);
-                    ob[4] = lista.get(4);
-                    ob[5] = lista.get(5);
-
-                    boolean exist = false;
-                    for (int i = 0; i < modelo.getRowCount(); i++) {
-                        System.out.println("" + modelo.getValueAt(i, 0));
-                        String codigob = TablaProductos.getValueAt(i, 0).toString();
-                        String cantidadpro = TablaProductos.getValueAt(i, 3).toString();
-                        if (codigobarra.equals(codigob)) {
-                            System.out.println("******************************************************");
-                            int nuevocantidadpro = Integer.parseInt(cantidadpro);
-                            
-                            int sum = nuevocantidadpro + 1;
-                            lista.remove(3);
-                            ob[3] = lista.remove(3);
-                            lista.add(sum);
-                            ob[3] = lista.get(3);
-                            exist = true;
-                            System.out.println("esto es: " + sum);
-                            break;
-
-//                            System.out.println("" + modelo.getValueAt(i, 3) + "lo nuevo" + can);
-                        }
-
-                    }
-                    if (!exist) {
-                        modelo.addRow(ob);
-                        TablaProductos.setModel(modelo);
-
-                        calculartotal();
-                        calculariva();
-                        lista.remove(ob);
-                        lista.clear();
-                        codigobarra = null;
-                        nombre = null;
-                    }
-                    lista.remove(ob);
-                    lista.clear();
-                    codigobarra = null;
-                    nombre = null;
-
-                }
-            }
-        } catch (Exception e) {
-
-        }
-
-        limpiarcampos();
-    }
+//    void agregarproducto22() {
+//
+//        codigobarra = null;
+//        lista.clear();
+//        Object[] ob = new Object[6];
+//        String sql = "select * from table_producto where codigo_producto_PK = " + txtCodigoProducto.getText() + "";
+//        Connection conect = conexion.getconnection();
+//        try {
+//            Statement st = conect.createStatement();
+//            ResultSet rs = st.executeQuery(sql);
+//            while (rs.next()) {
+//                codigobarra = rs.getString("codigo_producto_PK");
+//                nombre = rs.getString("nombre");
+//                precio = rs.getInt("precio");
+//            }
+////            if (txtCodigoProducto.getText().equals("")) {
+////                JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+////            } else {
+//            int total, descuento, iva, cantidadproducto;
+//            modelo = (DefaultTableModel) TablaProductos.getModel();
+//
+//            can = 1;
+//            total = can * precio;
+////                if (codigobarra != codigobarra || nombre == null || codigobarra == null) {
+////                    JOptionPane.showMessageDialog(null, "Codigo no registrado", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+////                } else {
+//            lista.add(codigobarra);
+//            lista.add(nombre);
+//            lista.add(precio);
+//            lista.add(can);
+//            lista.add(0);
+//            lista.add(total);
+//
+//            ob[0] = lista.get(0);
+//            ob[1] = lista.get(1);
+//            ob[2] = lista.get(2);
+//            ob[3] = lista.get(3);
+//            ob[4] = lista.get(4);
+//            ob[5] = lista.get(5);
+//            boolean exist = false;
+//            for (int i = 0; i < modelo.getRowCount(); i++) {
+//                System.out.println("" + modelo.getValueAt(i, 0));
+//                String codigob = TablaProductos.getValueAt(i, 0).toString();
+//                if (codigobarra.equals(codigob)) {
+//                    String cantidadpro = TablaProductos.getValueAt(i, 3).toString();
+//                    System.out.println("*************************" + cantidadpro + "************************");
+//                    System.out.println("******************************************************");
+//                    int nuevocantidadpro = Integer.parseInt(cantidadpro);
+//                    int sum = nuevocantidadpro + 1;
+//                    Iterator it = lista.iterator();
+//                    DefaultTableModel dm = (DefaultTableModel) TablaProductos.getModel();
+//                    while (it.hasNext()) {
+//                        System.out.println("MUESTRA DE DATOS LISTA : " + it.next());
+////                                lista.set(3, sum);
+////                                ob[3] = lista.set(3, sum);
+//                        if (codigobarra.equals(TablaProductos.getValueAt(i, 0))) {
+//                            TablaProductos.setValueAt(sum, 1,
+//                                    3);
+//                        }
+//
+//                        int calucototla = sum * precio;
+//                        TablaProductos.setValueAt(calucototla, 0, 5);
+//                        txtDescuentoVenta.setText("" + calucototla);
+//                    }
+//                    exist = true;
+//                    modelo.fireTableDataChanged();
+//                    System.out.println("la suma de producto existen mas el nmuevo es: " + sum);
+//                    System.out.println("Codigo del producto: " + TablaProductos.getValueAt(i, 0));
+//                    System.out.println("cantidad existente: " + TablaProductos.getValueAt(i, 3));
+//                    System.out.println("--FIN--");
+//                    lista.remove(ob);
+//                    lista.clear();
+//                    codigobarra = null;
+//                    nombre = null;
+//                    break;
+//                }
+//            }
+//            if (!exist) {
+//                modelo.addRow(ob);
+//                TablaProductos.setModel(modelo);
+//                calculartotal();
+//                calculariva();
+//                lista.remove(ob);
+//                lista.clear();
+//                codigobarra = null;
+//                nombre = null;
+//                System.out.println("pasa por aca");
+//            }
+//            lista.remove(ob);
+//            lista.clear();
+//            codigobarra = null;
+//            nombre = null;
+////                }
+////            }
+//            st.cancel();
+//        } catch (Exception e) {
+//        }
+//        lista.clear();
+//        lista.remove(ob);
+//        codigobarra = null;
+//        nombre = null;
+//        limpiarcampos();
+//
+//    }
 
     void agregarproducto3() {
 
@@ -565,7 +774,8 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
             }
 
             if (ingresomanual.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+                Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+                JOptionPane.showMessageDialog(null, "Ingrese codigo de producto", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
             } else {
 
                 int total, descuento, iva, cantidadproducto;
@@ -587,14 +797,14 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
                 //    lista.remove(i);
                 //}
                 if (codigobarra != codigobarra || nombre == null || codigobarra == null) {
-                    JOptionPane.showMessageDialog(null, "Codigo no registrado", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+                    Icon icono = new ImageIcon(getClass().getResource("/iconosjoption/advertencia.png"));
+                    JOptionPane.showMessageDialog(null, "Codigo no registrado", "Alerta", JOptionPane.DEFAULT_OPTION, icono);
                 } else {
 
                     lista.add(codigobarra);
                     lista.add(nombre);
                     lista.add(precio);
                     lista.add(cant);
-                    lista.add(0);
                     lista.add(total);
                     Object[] ob = new Object[6];
                     ob[0] = lista.get(0);
@@ -602,7 +812,6 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
                     ob[2] = lista.get(2);
                     ob[3] = lista.get(3);
                     ob[4] = lista.get(4);
-                    ob[5] = lista.get(5);
                     modelo.addRow(ob);
                     TablaProductos.setModel(modelo);
 
@@ -620,6 +829,37 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
         limpiarcampos();
 
     }
+
+    void guardarventa() {
+        String fecha = lblFecha.getText();
+        
+        
+        int montototal =Integer.parseInt(txtTotalVenta.getText().toString());
+        int valor_iva_venta= Integer.parseInt(txtIvaVenta.getText().toString());
+        
+        ev.setFecha_venta(fecha);
+        ev.setValor_iva(valor_iva_venta);
+        ev.setMonto_venta(montototal);
+       
+
+        ventasql.Guardar_Venta(ev);
+    }
+    
+    void guardardetalle(){
+        for (int i = 0; i < TablaProductos.getRowCount(); i++) {
+            String codigodeproducto = TablaProductos.getValueAt(i, 0).toString();
+            int cantidaddeproducto= Integer.parseInt(TablaProductos.getValueAt(i, 3).toString());
+            
+            edv.setFk_produc_codigo(codigodeproducto);
+            edv.setCantidad_producto(cantidaddeproducto);
+            ventasql.GuardarDetalleVenta(edv);
+            
+            
+        }
+    }
+    
+    
+    
 
     void calculartotal() {
         int totalpago = 0;
@@ -648,22 +888,22 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JRadioButton RB_IngresoManual;
     private javax.swing.JTable TablaProductos;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelarVenta;
     private javax.swing.JButton btnGenerarVenta;
     private javax.swing.JTextField ingresomanual;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -674,9 +914,9 @@ public class Ventana_venta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblFecha;
     private org.edisoncor.gui.varios.ClockDigital lblHora;
     private javax.swing.JLabel lblVentaDescuento;
+    private javax.swing.JTextField pro_nombre;
+    private javax.swing.JTextField pro_precio;
     private javax.swing.JTextField txtCantidadProducto;
-    private javax.swing.JTextField txtCodigoProducto;
-    private javax.swing.JTextField txtDescuentoVenta;
     private javax.swing.JTextField txtIvaVenta;
     private javax.swing.JTextField txtTotalVenta;
     // End of variables declaration//GEN-END:variables

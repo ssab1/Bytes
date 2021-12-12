@@ -1,10 +1,12 @@
 package vista;
 
+import java.awt.event.KeyEvent;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import sql.EntidadPersonal;
 import sql.InicioSesion;
+
 /**
  *
  * @author basti
@@ -16,10 +18,11 @@ public class Inicio_sesion extends javax.swing.JFrame {
      */
     EntidadPersonal EP = new EntidadPersonal();
     InicioSesion log = new InicioSesion();
-    
-    
+
     public Inicio_sesion() {
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("/iconos/Bicon.png")).getImage());
+        txt_rut.requestFocus();
         //centrar JFRAME
         this.setLocationRelativeTo(null);
     }
@@ -57,6 +60,9 @@ public class Inicio_sesion extends javax.swing.JFrame {
         txt_rut.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
         txt_rut.setBorder(null);
         txt_rut.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_rutKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_rutKeyTyped(evt);
             }
@@ -109,42 +115,61 @@ public class Inicio_sesion extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_btn_salirMouseClicked
 
+
     private void btn_ingresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_ingresarMouseClicked
 //        Ventana_Principal1 vp = new Ventana_Principal1();
 //        vp.setVisible(true);
 //        this.dispose();
-          inicio_sesion();
+
+        inicio_sesion();
     }//GEN-LAST:event_btn_ingresarMouseClicked
 
     private void txt_rutKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_rutKeyTyped
         //excepciones de caracterez -,<,>,=....., a - z
+
+
     }//GEN-LAST:event_txt_rutKeyTyped
+
+    private void txt_rutKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_rutKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            inicio_sesion(); //Método que tienes que crearte
+        }
+    }//GEN-LAST:event_txt_rutKeyPressed
 
     /**
      * @param args the command line arguments
      */
-    
-    void inicio_sesion(){
-    String RUT= txt_rut.getText();
+    void inicio_sesion() {
+        String RUT = txt_rut.getText();
         if (txt_rut.getText().equals("")) {
 //            Icon icono = new ImageIcon(getClass().getResource("/iconos/warning.png"));
-           JOptionPane.showMessageDialog
-             (null, "Debe Ingresar Rut", "Alerta", JOptionPane.DEFAULT_OPTION, null);
-        }else{
+            JOptionPane.showMessageDialog(null, "Debe Ingresar Rut", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+        } else {
             EntidadPersonal enpe = log.ListarRut(RUT);
-            if (enpe.getRut()!=null) {
-             Ventana_Principal vp = new Ventana_Principal();
-             vp.setVisible(true);
-             this.dispose();
-                
-            }else{
-                JOptionPane.showMessageDialog
-             (null, "Rut Invalido", "Alerta", JOptionPane.DEFAULT_OPTION, null);
+            System.out.println("TIPO DE ROL ANTES DEL IF: "+enpe.getRol());
+            int variablerol= enpe.getRol();
+            if ( variablerol == 1) {
+                Ventana_Principal vp = new Ventana_Principal();
+//                Ventana_Principal.jmNuevoUsuario.setVisible(false);
+                vp.setVisible(true);
+                this.dispose();
+                System.out.println("TIPO ROL: "+variablerol);
+                System.out.println("INGRESA POR EL ROL 1");
+            }else if ( variablerol == 2) {
+                Ventana_Principal vp = new Ventana_Principal();
+                Ventana_Principal.jmNuevoUsuario.setVisible(false);
+                vp.setVisible(true);
+                this.dispose();
+                System.out.println("TIPO ROL: "+variablerol);
+                System.out.println("INGRESA POR EL ROL 2");
+            } else {
+                JOptionPane.showMessageDialog(null, "Rut Invalido", "Alerta", JOptionPane.DEFAULT_OPTION, null);
             }
-            
+
         }
-        
+
     }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

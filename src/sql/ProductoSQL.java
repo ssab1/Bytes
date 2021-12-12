@@ -44,7 +44,9 @@ public class ProductoSQL implements CRUD {
     @Override
     public List listar() {
         List<EntidadProducto> lista = new ArrayList<>();
-        String sql = "select * from table_producto";
+        String sql = "select codigo_producto_PK,nombre,precio"
+                + " from table_producto";
+        
         try {
             con = cn.getconnection();
             ps = con.prepareStatement(sql);
@@ -54,6 +56,7 @@ public class ProductoSQL implements CRUD {
                 ep.setCodigo(rs.getString(1));
                 ep.setNombre(rs.getString(2));
                 ep.setPrecio(rs.getInt(3));
+                
                 lista.add(ep);
             }
         } catch (Exception e) {

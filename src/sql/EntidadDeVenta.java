@@ -5,24 +5,25 @@ package sql;
  * @author basti
  */
 public class EntidadDeVenta {
-    
+    int id_detalle_venta_PK;
     int fk_num_venta;
     String fk_produc_codigo;
     int cantidad_producto;
-    int valor_iva;
     int descuento;
-    int subtotal;
 
     public EntidadDeVenta() {
     }
 
-    public EntidadDeVenta(int fk_num_venta, String fk_produc_codigo, int cantidad_producto, int valor_iva, int descuento, int subtotal) {
+    public EntidadDeVenta(int id_detalle_venta_PK, int fk_num_venta, String fk_produc_codigo, int cantidad_producto, int descuento) {
+        this.id_detalle_venta_PK = id_detalle_venta_PK;
         this.fk_num_venta = fk_num_venta;
         this.fk_produc_codigo = fk_produc_codigo;
         this.cantidad_producto = cantidad_producto;
-        this.valor_iva = valor_iva;
         this.descuento = descuento;
-        this.subtotal = subtotal;
+    }
+
+    public int getId_detalle_venta_PK() {
+        return id_detalle_venta_PK;
     }
 
     public int getFk_num_venta() {
@@ -37,16 +38,13 @@ public class EntidadDeVenta {
         return cantidad_producto;
     }
 
-    public int getValor_iva() {
-        return valor_iva;
-    }
 
     public int getDescuento() {
         return descuento;
     }
 
-    public int getSubtotal() {
-        return subtotal;
+    public void setId_detalle_venta_PK(int id_detalle_venta_PK) {
+        this.id_detalle_venta_PK = id_detalle_venta_PK;
     }
 
     public void setFk_num_venta(int fk_num_venta) {
@@ -61,18 +59,10 @@ public class EntidadDeVenta {
         this.cantidad_producto = cantidad_producto;
     }
 
-    public void setValor_iva(int valor_iva) {
-        this.valor_iva = valor_iva;
-    }
-
     public void setDescuento(int descuento) {
         this.descuento = descuento;
     }
 
-    public void setSubtotal(int subtotal) {
-        this.subtotal = subtotal;
-    }
-    
     
     
     
